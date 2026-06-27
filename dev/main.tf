@@ -2,7 +2,7 @@
 # 1. RESOURCE GROUP MODULE
 # ============================================================================
 module "resource_group" {
-  source = "./modules/resource_group"
+  source = "../modules/resource_group"
 
   resource_group_name = var.resource_group_name
   location            = var.location
@@ -12,7 +12,7 @@ module "resource_group" {
 # 2. VIRTUAL NETWORK & SUBNET MODULE
 # ============================================================================
 module "network" {
-  source = "./modules/network"
+  source = "../modules/network"
 
   vnet_name                   = var.vnet_name
   resource_group_name         = module.resource_group.name
@@ -31,7 +31,7 @@ module "network" {
 # 3. LOGGING & MONITORING MODULE
 # ============================================================================
 module "log_analytics" {
-  source = "./modules/log_analytics"
+  source = "../modules/log_analytics"
 
   workspace_name      = var.log_analytics_workspace_name
   resource_group_name = module.resource_group.name
@@ -47,7 +47,7 @@ module "log_analytics" {
 # 4. MANAGED IDENTITY & RBAC MODULE
 # ============================================================================
 module "identity" {
-  source = "./modules/identity"
+  source = "../modules/identity"
 
   identity_name       = "mi-${var.cluster_name}"
   resource_group_name = module.resource_group.name
@@ -65,7 +65,7 @@ module "identity" {
 # 5. AZURE KUBERNETES SERVICE (AKS) MODULE
 # ============================================================================
 module "aks" {
-  source = "./modules/aks"
+  source = "../modules/aks"
 
   cluster_name               = var.cluster_name
   resource_group_name        = module.resource_group.name
@@ -89,7 +89,7 @@ module "aks" {
 # 6. DYNAMIC SECONDARY NODE POOLS MODULE (FOR_EACH)
 # ============================================================================
 module "secondary_node_pools" {
-  source = "./modules/node_pool"
+  source = "../modules/node_pool"
 
   for_each = var.secondary_node_pools
 

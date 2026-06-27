@@ -21,9 +21,4 @@ provider "azurerm" {
       purge_soft_delete_on_destroy = true
     }
   }
-
-  # Default tags applied to all resources managed by this provider
-  default_tags {
-    tags = var.default_tags
-  }
 }
