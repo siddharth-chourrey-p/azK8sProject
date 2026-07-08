@@ -1,5 +1,5 @@
 resource_group_name          = "stage-rg"
-location                     = "eastus"
+location                     = "southeastasia"
 cluster_name                 = "stage-aks"
 dns_prefix                   = "stage-dns"
 vnet_name                    = "stage-vnet"

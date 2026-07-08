@@ -57,7 +57,7 @@ variable "default_tags" {
   description = "Default tags to be applied to all resources. Useful for tracking AntiGravity IDE workspace deployments."
   default = {
     Environment = "stage"
-    ManagedBy   = "AntiGravity-IDE"
+    ManagedBy   = "Terraform"
     Project     = "AzureK8s"
   }
 }
@@ -70,17 +70,17 @@ variable "default_node_pool" {
     min_count           = optional(number, 1)
     max_count           = optional(number, 3)
     enable_auto_scaling = optional(bool, true)
-    os_disk_size_gb     = optional(number, 128)
+    os_disk_size_gb     = optional(number, 30)
   })
   description = "Configuration for the default system node pool in AKS."
   default = {
     name                = "systempool"
     vm_size             = "Standard_D2s_v5"
-    node_count          = 2
+    node_count          = 1
     min_count           = 1
-    max_count           = 4
+    max_count           = 1
     enable_auto_scaling = true
-    os_disk_size_gb     = 128
+    os_disk_size_gb     = 30
   }
 }
 
@@ -90,9 +90,9 @@ variable "secondary_node_pools" {
     vm_size             = string
     node_count          = number
     min_count           = optional(number, 1)
-    max_count           = optional(number, 5)
+    max_count           = optional(number, 1)
     enable_auto_scaling = optional(bool, true)
-    os_disk_size_gb     = optional(number, 128)
+    os_disk_size_gb     = optional(number, 20)
     mode                = optional(string, "User")
     node_labels         = optional(map(string), {})
     node_taints         = optional(list(string), [])
@@ -102,9 +102,9 @@ variable "secondary_node_pools" {
     app = {
       name                = "apppool"
       vm_size             = "Standard_D4s_v5"
-      node_count          = 2
-      min_count           = 2
-      max_count           = 5
+      node_count          = 1
+      min_count           = 1
+      max_count           = 1
       enable_auto_scaling = true
       mode                = "User"
       node_labels         = { workload = "application", environment = "stage" }
@@ -114,7 +114,7 @@ variable "secondary_node_pools" {
       vm_size             = "Standard_D4s_v5"
       node_count          = 1
       min_count           = 1
-      max_count           = 3
+      max_count           = 1
       enable_auto_scaling = true
       mode                = "User"
       node_labels         = { workload = "batch", priority = "low" }
