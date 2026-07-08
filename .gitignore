@@ -1,0 +1,22 @@
+# Local .terraform directories and files
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+.terraform.lock.hcl
+
+# Ignore override files
+*.override.tf
+*.override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore generated kubeconfig directory
+.kube/
+
+# macOS specific
+.DS_Store
+
+# vs code workspace
+*.code-workspace
