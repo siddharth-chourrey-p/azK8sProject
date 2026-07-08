@@ -1,5 +1,5 @@
 resource_group_name          = "dev-rg"
-location                     = "eastus"
+location                     = "southeastasia"
 cluster_name                 = "dev-aks"
 dns_prefix                   = "dev-dns"
 vnet_name                    = "dev-vnet"
@@ -11,6 +11,6 @@ kubeconfig_output_path       = "./.kube/config"
 
 default_tags = {
   Environment = "dev"
-  ManagedBy   = "AntiGravity-IDE"
+  ManagedBy   = "Terraform"
   Project     = "AzureK8s"
 }

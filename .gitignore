@@ -17,3 +17,6 @@ crash.*.log
 
 # macOS specific
 .DS_Store
+
+# vs code workspace
+*.code-workspace
