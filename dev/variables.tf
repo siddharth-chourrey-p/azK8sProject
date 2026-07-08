@@ -123,8 +123,4 @@ variable "secondary_node_pools" {
   }
 }
 
-variable "kubeconfig_output_path" {
-  type        = string
-  description = "Path where the kubeconfig file will be generated in the AntiGravity workspace environment."
-  default     = "./.kube/config"
-}
+

@@ -3,22 +3,13 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.90"
-    }
-    local = {
-      source  = "hashicorp/local"
-      version = "~> 2.4"
+      version = "~> 4.0"
     }
   }
 }
 
 provider "azurerm" {
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
-    }
-    key_vault {
-      purge_soft_delete_on_destroy = true
-    }
-  }
+  resource_provider_registrations = "none"
+  
+  features {}
 }

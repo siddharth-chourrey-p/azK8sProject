@@ -112,16 +112,3 @@ module "secondary_node_pools" {
   ]
 }
 
-# ============================================================================
-# 7. ANTIGRAVITY IDE KUBECONFIG AUTOMATION
-# ============================================================================
-resource "local_file" "kubeconfig" {
-  content         = module.aks.kube_config_raw
-  filename        = var.kubeconfig_output_path
-  file_permission = "0600"
-
-  # depends_on: Enforce that kubeconfig is written only after the cluster is fully established
-  depends_on = [
-    module.aks
-  ]
-}
