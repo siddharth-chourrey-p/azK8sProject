@@ -2,9 +2,9 @@ name: "Deploy AKS with terraform"
 
 on:
   push:
-    branches: [ "main" ] #Applied when pushed on main branch
+    branches: [ "master" ] #Applied when pushed on main branch
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 env:
   # Getting Azure creds from github secrets
