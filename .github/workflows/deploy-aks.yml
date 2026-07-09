@@ -17,6 +17,9 @@ jobs:
   terraform-deploy:
     name: "Terraform CI/CD"
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./dev
 
     steps:
       # Checkout repo
