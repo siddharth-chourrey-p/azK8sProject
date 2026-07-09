@@ -1,0 +1,49 @@
+name: "Deploy AKS with terraform"
+
+on:
+  push:
+    branches: [ "main" ] #Applied when pushed on main branch
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  # Getting Azure creds from github secrets
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
+jobs:
+  terraform-deploy:
+    name: "Terraform CI/CD"
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repo
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      # Install terraform in agent
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with: 
+          terraform_version: "1.7.0"
+
+      # Terraform Init
+      - name: Terraform init
+        run: terraform init
+
+      # Adjust formating
+      - name: Terraform Format
+        run: terraform fmt -check
+      
+      # Terrafrom Plan
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan
+        continue-on-error: false
+      
+      # Step 6: Apply when push to main
+      - name: Terraform Apply (Deploy to Azure)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve

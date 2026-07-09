@@ -30,10 +30,7 @@ output "kube_config" {
   sensitive   = true
 }
 
-output "kubeconfig_local_path" {
-  description = "The local file path within the AntiGravity IDE workspace where the kubeconfig was automatically provisioned."
-  value       = var.kubeconfig_output_path
-}
+
 
 output "node_pools" {
   description = "Map of created secondary node pools with their respective configuration details."
