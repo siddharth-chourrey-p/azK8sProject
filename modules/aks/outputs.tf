@@ -8,10 +8,6 @@ output "cluster_id" {
   value       = azurerm_kubernetes_cluster.aks.id
 }
 
-output "oidc_issuer_url" {
-  description = "The OIDC issuer URL for the AKS cluster."
-  value       = azurerm_kubernetes_cluster.aks.oidc_issuer_url
-}
 
 output "host" {
   description = "The Kubernetes cluster server host FQDN / connection string."

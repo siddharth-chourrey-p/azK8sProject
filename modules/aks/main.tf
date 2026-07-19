@@ -1,10 +1,8 @@
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                      = var.cluster_name
-  location                  = var.location
-  resource_group_name       = var.resource_group_name
-  dns_prefix                = var.dns_prefix
-  oidc_issuer_enabled       = true
-  workload_identity_enabled = true
+  name                = var.cluster_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  dns_prefix          = var.dns_prefix
 
   default_node_pool {
     name                 = var.default_node_pool.name
@@ -19,18 +17,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   identity {
-    type         = "UserAssigned"
-    identity_ids = [var.user_assigned_identity_id]
+    type = "SystemAssigned"
   }
 
   network_profile {
-    network_plugin    = "azure"
-    network_policy    = "azure"
+    network_plugin    = "kubenet"
     load_balancer_sku = "standard"
-  }
-
-  oms_agent {
-    log_analytics_workspace_id = var.log_analytics_workspace_id
   }
 
   # lifecycle: Ignore node_count changes caused by cluster auto-scaler during live operations

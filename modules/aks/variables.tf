@@ -18,20 +18,12 @@ variable "dns_prefix" {
   description = "DNS prefix for the AKS cluster."
 }
 
-variable "user_assigned_identity_id" {
-  type        = string
-  description = "Resource ID of the User Assigned Managed Identity."
-}
 
 variable "aks_subnet_id" {
   type        = string
   description = "Subnet ID for the AKS cluster nodes."
 }
 
-variable "log_analytics_workspace_id" {
-  type        = string
-  description = "Log Analytics workspace ID for OMS agent monitoring."
-}
 
 variable "default_node_pool" {
   type = object({
