@@ -46,11 +46,6 @@ variable "aks_subnet_address_prefixes" {
   default     = ["10.240.0.0/20"]
 }
 
-variable "log_analytics_workspace_name" {
-  type        = string
-  description = "Name of the Log Analytics workspace for AKS container insights."
-  default     = "dev-law"
-}
 
 variable "default_tags" {
   type        = map(string)
@@ -75,7 +70,7 @@ variable "default_node_pool" {
   description = "Configuration for the default system node pool in AKS."
   default = {
     name                = "systempool"
-    vm_size             = "Standard_D2s_v5"
+    vm_size             = "Standard_B2s"
     node_count          = 1
     min_count           = 1
     max_count           = 1
@@ -84,43 +79,43 @@ variable "default_node_pool" {
   }
 }
 
-variable "secondary_node_pools" {
-  type = map(object({
-    name                = string
-    vm_size             = string
-    node_count          = number
-    min_count           = optional(number, 1)
-    max_count           = optional(number, 1)
-    enable_auto_scaling = optional(bool, true)
-    os_disk_size_gb     = optional(number, 20)
-    mode                = optional(string, "User")
-    node_labels         = optional(map(string), {})
-    node_taints         = optional(list(string), [])
-  }))
-  description = "Map of objects defining secondary node pools (e.g., app workloads, batch processing). Can be dynamically populated via TF_VAR_secondary_node_pools."
-  default = {
-    app = {
-      name                = "apppool"
-      vm_size             = "Standard_D4s_v5"
-      node_count          = 1
-      min_count           = 1
-      max_count           = 1
-      enable_auto_scaling = true
-      mode                = "User"
-      node_labels         = { workload = "application", environment = "dev" }
-    },
-    batch = {
-      name                = "batchpool"
-      vm_size             = "Standard_D4s_v5"
-      node_count          = 1
-      min_count           = 1
-      max_count           = 1
-      enable_auto_scaling = true
-      mode                = "User"
-      node_labels         = { workload = "batch", priority = "low" }
-      node_taints         = ["workload=batch:NoSchedule"]
-    }
-  }
-}
+# variable "secondary_node_pools" {
+#   type = map(object({
+#     name                = string
+#     vm_size             = string
+#     node_count          = number
+#     min_count           = optional(number, 1)
+#     max_count           = optional(number, 1)
+#     enable_auto_scaling = optional(bool, true)
+#     os_disk_size_gb     = optional(number, 20)
+#     mode                = optional(string, "User")
+#     node_labels         = optional(map(string), {})
+#     node_taints         = optional(list(string), [])
+#   }))
+#   description = "Map of objects defining secondary node pools (e.g., app workloads, batch processing). Can be dynamically populated via TF_VAR_secondary_node_pools."
+#   default = {
+#     app = {
+#       name                = "apppool"
+#       vm_size             = "Standard_B2s"
+#       node_count          = 1
+#       min_count           = 1
+#       max_count           = 1
+#       enable_auto_scaling = true
+#       mode                = "User"
+#       node_labels         = { workload = "application", environment = "dev" }
+#     },
+#     batch = {
+#       name                = "batchpool"
+#       vm_size             = "Standard_B2s"
+#       node_count          = 1
+#       min_count           = 1
+#       max_count           = 1
+#       enable_auto_scaling = true
+#       mode                = "User"
+#       node_labels         = { workload = "batch", priority = "low" }
+#       node_taints         = ["workload=batch:NoSchedule"]
+#     }
+#   }
+# }
 
 
