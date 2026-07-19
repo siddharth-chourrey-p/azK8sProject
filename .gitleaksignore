@@ -1,0 +1,9 @@
+# gitleaks ignore file
+
+# Ignore Terraform configuration files
+.github/*
+!**/.github/workflows/*.yml
+
+# Ignore specific files and directories
+**/tests/**
+**/.*.mock

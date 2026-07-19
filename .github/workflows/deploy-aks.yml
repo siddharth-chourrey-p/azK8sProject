@@ -32,6 +32,9 @@ jobs:
         with: 
           terraform_version: "1.7.0"
 
+      # Install SonarScanner
+      
+
       # Terraform Init
       - name: Terraform init
         run: terraform init
