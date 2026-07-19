@@ -6,11 +6,19 @@ on:
     pull_request:
         branches: [ "master" ]
 
+permissions:
+    contents: read
+
+
 jobs:
     scan:
         name : gitleaks 
         runs-on: self-hosted
         steps:
+            - name: Cleanup Runner Temp
+              run: rm -rf /tmp/gitleaks*
+              continue-on-error: true #Ignores if file not found
+
             - name: Checkout code
               uses: actions/checkout@v4
               with:
