@@ -2,9 +2,26 @@ name: "Deploy AKS with terraform"
 
 on:
   push:
-    branches: [ "master" ] #Applied when pushed on main branch
+    branches: ["master"] #Applied when pushed on main branch
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "select action to perform"
+        required: true
+        default: "apply"
+        type: choice
+        options:
+          - apply
+          - destroy
+        confirm_destroy:
+          description: 'Type "yes" to Confirm destroy action'
+          required: true
+          default: "no"
+
+permissions:
+  contents: read
 
 env:
   # Getting Azure creds from github secrets
@@ -17,6 +34,7 @@ jobs:
   terraform-deploy:
     name: "Terraform CI/CD (Dev)"
     runs-on: self-hosted
+
     defaults:
       run:
         working-directory: ./env/dev
@@ -29,11 +47,8 @@ jobs:
       # Install terraform in agent
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with: 
+        with:
           terraform_version: "1.7.0"
-
-      # Install SonarScanner
-      
 
       # Terraform Init
       - name: Terraform init
@@ -41,15 +56,27 @@ jobs:
 
       # Adjust formating
       - name: Terraform Format
+        if: ${{ github.event.inputs.confirm != 'destroy'}}
         run: terraform fmt -check
-      
+
       # Terrafrom Plan
       - name: Terraform Plan
+        if: ${{ github.event.inputs.confirm != 'destroy'}}
         id: plan
         run: terraform plan
         continue-on-error: false
-      
+
       # Step 6: Apply when push to master
       - name: Terraform Apply (Deploy to Azure)
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        if: |
+          (github.ref == 'refs/heads/master' && github.event_name == 'push') ||
+          (github.event.name == 'workflow_dispatch' && github.event.inputs.confirm == 'apply')
         run: terraform apply -auto-approve
+
+      # Step 7: Destroy when 'destroy' is selected
+      - name: Terraform Destroy (Delete Resources)
+        if: |
+          github.event.name == 'workflow_dispatch' &&
+          github.event.inputs.confirm == 'destroy' &&
+          github.event.inputs.confirm_destroy == 'yes'
+        run: terraform destroy -auto-approve
