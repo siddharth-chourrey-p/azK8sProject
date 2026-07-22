@@ -17,7 +17,7 @@ on:
           - destroy
         confirm_destroy:
           description: 'Type "yes" to Confirm destroy action'
-          required: true
+          required: false
           default: "no"
 
 permissions:
