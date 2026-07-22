@@ -56,12 +56,12 @@ jobs:
 
       # Adjust formating
       - name: Terraform Format
-        if: ${{ github.event.inputs.confirm != 'destroy'}}
+        if: inputs.action != 'destroy'
         run: terraform fmt -check
 
       # Terrafrom Plan
       - name: Terraform Plan
-        if: ${{ github.event.inputs.confirm != 'destroy'}}
+        if: inputs.action != 'destroy'
         id: plan
         run: terraform plan
         continue-on-error: false
@@ -69,14 +69,15 @@ jobs:
       # Step 6: Apply when push to master
       - name: Terraform Apply (Deploy to Azure)
         if: |
-          (github.ref == 'refs/heads/master' && github.event_name == 'push') ||
-          (github.event.name == 'workflow_dispatch' && github.event.inputs.confirm == 'apply')
+          (github.ref == 'refs/heads/master' && 
+          github.event_name == 'push') ||
+          (github.event_name == 'workflow_dispatch' && inputs.action == 'apply')
         run: terraform apply -auto-approve
 
       # Step 7: Destroy when 'destroy' is selected
       - name: Terraform Destroy (Delete Resources)
         if: |
-          github.event.name == 'workflow_dispatch' &&
-          github.event.inputs.confirm == 'destroy' &&
-          github.event.inputs.confirm_destroy == 'yes'
+          github.event_name == 'workflow_dispatch' &&
+          inputs.action == 'destroy' &&
+          inputs.confirm_destroy == 'yes'
         run: terraform destroy -auto-approve
