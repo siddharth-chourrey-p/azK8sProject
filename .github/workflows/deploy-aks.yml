@@ -7,7 +7,7 @@ on:
     branches: ["master"]
   workflow_dispatch:
     inputs:
-      confirm:
+      action:
         description: "select action to perform"
         required: true
         default: "apply"
@@ -15,10 +15,10 @@ on:
         options:
           - apply
           - destroy
-        confirm_destroy:
-          description: 'Type "yes" to Confirm destroy action'
-          required: false
-          default: "no"
+      confirm_destroy:
+        description: 'Type "yes" to Confirm destroy action'
+        required: false
+        default: "no"
 
 permissions:
   contents: read
