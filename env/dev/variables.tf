@@ -66,6 +66,8 @@ variable "default_node_pool" {
     max_count           = optional(number, 1)
     enable_auto_scaling = optional(bool, true)
     os_disk_size_gb     = optional(number, 30)
+    node_labels         = optional(map(string), {})
+    node_taints         = optional(list(string), [])
   })
   description = "Configuration for the default system node pool in AKS."
   default = {
@@ -76,6 +78,8 @@ variable "default_node_pool" {
     max_count           = 1
     enable_auto_scaling = true
     os_disk_size_gb     = 30
+    node_labels         = { "name" = "systempool" }
+    node_taints         = ["hardware=GPU:NoSchedule"]
   }
 }
 
