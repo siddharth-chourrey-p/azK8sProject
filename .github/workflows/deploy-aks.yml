@@ -36,7 +36,7 @@ env:
 jobs:
   terraform-deploy:
     name: "Terraform CI/CD (Dev)"
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     defaults:
       run:
@@ -47,13 +47,22 @@ jobs:
       - name: checkout code
         uses: actions/checkout@v4
 
-      # Create the provider cache dir and export TF_PLUGIN_CACHE_DIR at runtime.
-      # $HOME is used (not ~) because ~ is NOT shell-expanded in the env: block.
-      # Providers are written here once and reused on every subsequent run.
-      - name: Create plugin cache dir
+      # Setup provider plugin cache directory and export path for Terraform
+      - name: Setup Terraform plugin cache
         run: |
           mkdir -p $HOME/.terraform.d/plugin-cache
           echo "TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache" >> $GITHUB_ENV
+
+      # Cache azurerm provider binaries between runs via GitHub's cache service.
+      # Key is locked to .terraform.lock.hcl — cache is only invalidated when
+      # provider versions change. Saves ~3 min download on every run.
+      - name: Cache Terraform providers
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.HOME }}/.terraform.d/plugin-cache
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+          restore-keys: |
+            ${{ runner.os }}-terraform-
         
       # Install terraform in agent
       - name: Setup Terraform
