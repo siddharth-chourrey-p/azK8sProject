@@ -30,7 +30,8 @@ env:
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
   ARM_USE_OIDC: true
-  TF_PLUGIN_CACHE_DIR: ~/.terraform.d/plugin-cache
+  # TF_PLUGIN_CACHE_DIR is set at runtime in the step below (tilde ~ is not
+  # expanded in GitHub Actions env blocks, causing a "no such file" error)
 
 jobs:
   terraform-deploy:
@@ -46,11 +47,13 @@ jobs:
       - name: checkout code
         uses: actions/checkout@v4
 
-      # Ensure plugin cache dir exists on the persistent self-hosted runner disk
-      # TF_PLUGIN_CACHE_DIR (set in env) means providers are written here once
-      # and reused on every subsequent run — no re-download needed.
+      # Create the provider cache dir and export TF_PLUGIN_CACHE_DIR at runtime.
+      # $HOME is used (not ~) because ~ is NOT shell-expanded in the env: block.
+      # Providers are written here once and reused on every subsequent run.
       - name: Create plugin cache dir
-        run: mkdir -p ~/.terraform.d/plugin-cache
+        run: |
+          mkdir -p $HOME/.terraform.d/plugin-cache
+          echo "TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache" >> $GITHUB_ENV
         
       # Install terraform in agent
       - name: Setup Terraform
