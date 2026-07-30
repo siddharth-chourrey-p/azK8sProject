@@ -30,6 +30,7 @@ env:
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
   ARM_USE_OIDC: true
+  TF_PLUGIN_CACHE_DIR: ~/.terraform.d/plugin-cache
 
 jobs:
   terraform-deploy:
@@ -45,6 +46,12 @@ jobs:
       - name: checkout code
         uses: actions/checkout@v4
 
+      # Ensure plugin cache dir exists on the persistent self-hosted runner disk
+      # TF_PLUGIN_CACHE_DIR (set in env) means providers are written here once
+      # and reused on every subsequent run — no re-download needed.
+      - name: Create plugin cache dir
+        run: mkdir -p ~/.terraform.d/plugin-cache
+        
       # Install terraform in agent
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -52,8 +59,9 @@ jobs:
           terraform_version: "1.7.0"
 
       # Terraform Init
+      # -upgrade=false: skip provider version re-checking when .terraform.lock.hcl is unchanged
       - name: Terraform init
-        run: terraform init
+        run: terraform init -upgrade=false
 
       # Adjust formating
       - name: Terraform Format
